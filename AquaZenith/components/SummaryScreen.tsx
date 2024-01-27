@@ -13,7 +13,6 @@ import {
 import {
   Colors,
   DebugInstructions,
-  Header,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
@@ -64,23 +63,19 @@ function SummaryScreen(): React.JSX.Element {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={backgroundStyle}>
-          <Header />
+          
           <View
             style={{
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             }}>
-            <Section title="Step One">
-              Edit <Text style={styles.highlight}>App.tsx</Text> SummaryScreen to change this
-              screen and then come back to see your edits.
+            <Section title="Activity">
+              Get data from health app and display it <Text style={styles.highlight}>here</Text>.
             </Section>
-            <Section title="See Your Changes">
-              <ReloadInstructions />
+            <Section title="Sleep">
+              Get data from health app and display it <Text style={styles.highlight}>here</Text>.
             </Section>
-            <Section title="Debug">
-              <DebugInstructions />
-            </Section>
-            <Section title="Learn More">
-              Read the docs to discover what to do next:
+            <Section title="Water">
+              Get data from health app and display it <Text style={styles.highlight}>here</Text>.
             </Section>
           </View>
         </ScrollView>
