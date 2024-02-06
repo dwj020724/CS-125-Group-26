@@ -6,23 +6,12 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import {
   Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
 import { 
@@ -34,6 +23,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SettingsScreen from './components/SettingsScreen';
 import SummaryScreen from './components/SummaryScreen';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -50,6 +40,7 @@ function App(): React.JSX.Element {
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator>
         <Tab.Screen name="Summary" component={SummaryScreen} />
+        <Tab.Screen name="Exercise" component={SummaryScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>
