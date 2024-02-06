@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>AquaZenith would like to use yout health data to help you reach your lifestyle goals.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>AquaZenith would like to use yout health data to help you reach your lifestyle goals.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -35,6 +31,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>AquaZenith would like to use yout health data to help you reach your lifestyle goals.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>AquaZenith would like to use yout health data to help you reach your lifestyle goals.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>
