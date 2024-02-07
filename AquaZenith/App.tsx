@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+// import AppleHealthKit from 'react-native-health';
 import {
   useColorScheme,
 } from 'react-native';
@@ -23,6 +24,22 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SettingsScreen from './components/SettingsScreen';
 import SummaryScreen from './components/SummaryScreen';
+
+
+// const options = {
+//   permissions: {
+//     read: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
+//     write: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
+//   },
+// };
+
+// AppleHealthKit.initHealthKit(options, (err, results) => {
+//   if (err) {
+//     console.log('error initializing Healthkit: ', err);
+//     return;
+//   }
+//   // HealthKit is initialized, and permissions are granted to access the data
+// });
 
 
 const Tab = createBottomTabNavigator();
