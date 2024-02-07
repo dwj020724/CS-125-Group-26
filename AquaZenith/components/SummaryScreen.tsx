@@ -69,7 +69,7 @@ function SummaryScreen(): React.JSX.Element {
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             }}>
             <Section title="Activity">
-              Get data from health app and display it hello <Text style={styles.highlight}>here</Text>.
+              Get data from health app and display it <Text style={styles.highlight}>here</Text>.
             </Section>
             <Section title="Sleep">
               Get data from health app and display it <Text style={styles.highlight}>here</Text>.
