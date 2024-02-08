@@ -27,7 +27,7 @@ import SettingsScreen from './components/SettingsScreen';
 import SummaryScreen from './components/SummaryScreen';
 import WelcomePage from './components/WelcomePage';
 import UserInfo from './components/UserInfo';
-import HealthDataComponent from './components/HealthDataComponent';
+
 
 
 const options = {

@@ -14,6 +14,8 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
+import HealthDataComponent from './HealthDataComponent';
+
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -67,7 +69,7 @@ function SummaryScreen(): React.JSX.Element {
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             }}>
             <Section title="Activity">
-              Get data from health app and display it <Text style={styles.highlight}>here</Text>.
+              <HealthDataComponent/>
             </Section>
             <Section title="Sleep">
               Get data from health app and display it <Text style={styles.highlight}>here</Text>.
