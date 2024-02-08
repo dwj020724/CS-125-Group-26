@@ -6,24 +6,14 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
+import AppleHealthKit from 'react-native-health';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
 import {
@@ -37,6 +27,24 @@ import SettingsScreen from './components/SettingsScreen';
 import SummaryScreen from './components/SummaryScreen';
 import WelcomePage from './components/WelcomePage';
 import UserInfo from './components/UserInfo';
+import HealthDataComponent from './components/HealthDataComponent';
+
+
+const options = {
+  permissions: {
+    read: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
+    write: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
+  },
+};
+
+AppleHealthKit.initHealthKit(options, (err, results) => {
+  if (err) {
+    console.log('error initializing Healthkit: ', err);
+    return;
+  }
+  // HealthKit is initialized, and permissions are granted to access the data
+});
+
 
 export type RootStackParamList = {
   Welcome: undefined;

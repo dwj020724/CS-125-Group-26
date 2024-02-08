@@ -31,6 +31,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>AquaZenith would like to use yout health data to help you reach your lifestyle goals.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>AquaZenith would like to use yout health data to help you reach your lifestyle goals.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>
