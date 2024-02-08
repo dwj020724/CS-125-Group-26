@@ -1,62 +1,6 @@
-// // import React, { Component } from 'react';
-// // import { View, Text, Button } from 'react-native';
-// // import AppleHealthKit from 'react-native-health';
-
-// // class HealthDataComponent extends Component {
-// //   constructor(props) {
-// //     super(props);
-// //     this.state = {
-// //       stepCountData: null,
-// //     };
-// //   }
-
-// //   componentDidMount() {
-// //     this.loadStepCountData();
-// //   }
-
-// //   loadStepCountData = () => {
-// //     let options = {
-// //       startDate: (new Date(2022, 1, 1)).toISOString(), // Adjust dates as needed
-// //       endDate: (new Date()).toISOString(),
-// //     };
-
-// //     AppleHealthKit.getDailyStepCountSamples(options, (err, results) => {
-// //       if (err) {
-// //         console.error("Error fetching step count data: ", err);
-// //         return;
-// //       }
-// //       this.setState({ stepCountData: results });
-// //     });
-// //   };
-
-// //   render() {
-// //     const { stepCountData } = this.state;
-
-// //     return (
-// //       <View>
-// //         <Text>Step Count Data</Text>
-// //         {stepCountData ? (
-// //           stepCountData.map((entry, index) => (
-// //             <Text key={index}>
-// //               {entry.startDate} - {entry.value} steps
-// //             </Text>
-// //           ))
-// //         ) : (
-// //           <Text>Loading...</Text>
-// //         )}
-// //         <Button title="Refresh Data" onPress={this.loadStepCountData} />
-// //       </View>
-// //     );
-// //   }
-// // }
-
-// // export default HealthDataComponent;
-
-
-
-import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
-import AppleHealthKit from 'react-native-health';
+import React, { Component, useEffect, useState } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import AppleHealthKit, { HealthInputOptions } from 'react-native-health';
 
 // Define an interface for the component's state
 interface HealthDataComponentState {
@@ -82,18 +26,24 @@ class HealthDataComponent extends Component<HealthDataComponentProps, HealthData
   }
 
   loadStepCountData = () => {
-    let options = {
-      startDate: (new Date(2022, 1, 1)).toISOString(), // use a proper start date
-      endDate: (new Date(2024, 2, 7)).toISOString(), // use a proper end date
+
+    let options: HealthInputOptions = {
+      startDate: new Date(2024, 1, 1).toISOString(), // optional; default now
+      endDate: new Date().toISOString(),
+      includeManuallyAdded: true // optional: default true
     };
 
-    AppleHealthKit.getDailyStepCountSamples(options, (err: any, results: Array<{startDate: string; value: number}>) => {
-      if (err) {
-        console.error("Error fetching step count data: ", err);
-        return;
-      }
-      this.setState({ stepCountData: results });
-    });
+    AppleHealthKit.getDailyStepCountSamples(
+      (options),
+      (err: Object, results: Array<{startDate: string; value: number}>) => {
+        if (err) {
+          return
+        }
+        console.log(results)
+        this.setState({ stepCountData: results });
+        
+      },
+    )
   };
 
   render() {
@@ -101,20 +51,42 @@ class HealthDataComponent extends Component<HealthDataComponentProps, HealthData
 
     return (
       <View>
-        <Text>Step Count Data</Text>
+        <Text style={styles.titleText}>Step Count Data</Text>
         {stepCountData ? (
           stepCountData.map((entry, index) => (
-            <Text key={index}>
+            <Text key={index} style={styles.stepCountText}>
               {entry.startDate} - {entry.value} steps
             </Text>
           ))
         ) : (
-          <Text>Loading...</Text>
+          <Text style={styles.loadingText}>Loading...</Text>
         )}
         <Button title="Refresh Data" onPress={this.loadStepCountData} />
       </View>
     );
   }
+
+
+
 }
+
+const styles = StyleSheet.create({
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  stepCountText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  loadingText: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: 'white',
+  },
+});
+
+
 
 export default HealthDataComponent;
