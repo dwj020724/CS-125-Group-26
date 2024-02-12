@@ -16,7 +16,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   Colors,
@@ -25,7 +25,6 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
 import {
   NavigationContainer,
   DefaultTheme,
@@ -38,6 +37,27 @@ import SummaryScreen from './components/SummaryScreen';
 import WelcomePage from './components/WelcomePage';
 import UserInfo from './components/UserInfo';
 
+import { faHouse } from '@fortawesome/free-solid-svg-icons/faHouse'
+import { faGear } from '@fortawesome/free-solid-svg-icons/faGear'
+import { faPersonWalking } from '@fortawesome/free-solid-svg-icons/faPersonWalking'
+import ExercisePage from './components/ExercisePage';
+
+const options = {
+  permissions: {
+    read: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
+    write: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
+  },
+};
+
+AppleHealthKit.initHealthKit(options, (err, results) => {
+  if (err) {
+    console.log('error initializing Healthkit: ', err);
+    return;
+  }
+  // HealthKit is initialized, and permissions are granted to access the data
+});
+
+
 export type RootStackParamList = {
   Welcome: undefined;
   Main: undefined;
@@ -49,8 +69,35 @@ const Stack = createStackNavigator<RootStackParamList>();
 function MainTabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Summary" component={SummaryScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Summary" 
+      component={SummaryScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <FontAwesomeIcon icon={faHouse} color={color} size={size} />
+        ),
+      }}
+      />
+
+      <Tab.Screen name="Exercise" 
+      component={ExercisePage}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <FontAwesomeIcon icon={faPersonWalking} color={color} size={size} />
+        ),
+      }}
+      />
+      
+      <Tab.Screen name="Settings" 
+      component={SettingsScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <FontAwesomeIcon icon={faGear} color={color} size={size} />
+        ),
+      }}
+       />
+
+
+      
     </Tab.Navigator>
   );
 }
@@ -70,6 +117,7 @@ function App(): React.JSX.Element {
         <Stack.Screen name="Main" component={MainTabs} />
       </Stack.Navigator>
     </NavigationContainer>
+    
   );
 }
 
