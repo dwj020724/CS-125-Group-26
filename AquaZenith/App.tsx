@@ -34,8 +34,8 @@ import ExercisePage from './components/ExercisePage';
 
 const options = {
   permissions: {
-    read: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
-    write: [AppleHealthKit.Constants.Permissions.Steps /*, add other permissions */],
+    read: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.Water, AppleHealthKit.Constants.Permissions.SleepAnalysis, AppleHealthKit.Constants.Permissions.ActivitySummary],
+    write: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.Water, AppleHealthKit.Constants.Permissions.SleepAnalysis, AppleHealthKit.Constants.Permissions.ActivitySummary],
   },
 };
 

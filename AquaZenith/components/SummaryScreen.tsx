@@ -16,6 +16,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import HealthDataComponent from './HealthDataComponent';
+import HealthDataBoxComponent from './HealthDataBoxComponent';
 
 
 type SectionProps = PropsWithChildren<{
@@ -93,29 +94,22 @@ function SummaryScreen(): React.JSX.Element {
         <View style={styles.metricsContainer}>
           {/* Heart Rate */}
           <View style={[styles.metricCard, styles.cardHeartRate]}>
-            {/* <Image style={styles.icon} source={require('./path/to/your/heart_icon.png')} /> */}
-            <Text style={styles.metricTitle}>Heart Rate</Text>
-            <Text style={styles.metricValue}>78 bpm</Text>
+            <HealthDataBoxComponent type='Calories'/>
           </View>
 
           {/* Exercise */}
           <View style={[styles.metricCard, styles.cardExercise]}>
-            {/* <Image style={styles.icon} source={require('./path/to/your/exercise_icon.png')} /> */}
-            <Text style={styles.metricTitle}>Exercise</Text>
-            <Text style={styles.metricValue}>300 cal</Text>
+            <HealthDataBoxComponent type='Exercise'/>
           </View>
 
           {/* Sleep */}
           <View style={[styles.metricCard, styles.cardSleep]}>
-            <Text style={styles.metricTitle}>Sleep</Text>
-            <Text style={styles.metricValue}>8 hrs</Text>
+          <HealthDataBoxComponent type='Sleep'/>
           </View>
 
           {/* Hydration */}
           <View style={[styles.metricCard, styles.cardHydration]}>
-            {/* <Image style={styles.icon} source={require('./path/to/your/hydration_icon.png')} /> */}
-            <Text style={styles.metricTitle}>Hydration</Text>
-            <Text style={styles.metricValue}>1000 mL</Text>
+          <HealthDataBoxComponent type='Hydration'/>
           </View>
         </View>
 
