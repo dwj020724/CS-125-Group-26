@@ -15,7 +15,10 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
-import { Picker } from '@react-native-picker/picker';
+// import { Picker } from '@react-native-picker/picker';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import SelectDropdown from 'react-native-select-dropdown';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown'
 import {
   Colors,
   DebugInstructions,
@@ -61,9 +64,9 @@ function UserInfo(): React.JSX.Element {
   const [year, setYear] = useState('');
 
   // Generate arrays for days, months, and years
-  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  const years = Array.from({ length: 101 }, (_, i) => (new Date().getFullYear() - i).toString());
+  const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
+  const months = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
+  const years = Array.from({ length: 101 }, (_, i) => `${new Date().getFullYear() - i}`);
 
 //   const backgroundStyle = {
 //     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -84,13 +87,13 @@ return (
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Weight</Text>
-            <TextInput style={styles.input} placeholder="Type here" keyboardType="numeric" />
+            <TextInput style={styles.input} placeholder="Type here in pounds" keyboardType="numeric" />
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Height</Text>
-            <TextInput style={styles.input} placeholder="Type here" keyboardType="numeric" />
+            <TextInput style={styles.input} placeholder="Type here in feet and inches" keyboardType="numeric" />
           </View>
-          <View style={styles.birthDateSection}>
+          {/* <View style={styles.birthDateSection}>
             <Text style={styles.birthDateLabel}>Birth Date</Text>
             <View style={styles.birthDateContainer}>
             <Picker
@@ -121,16 +124,57 @@ return (
               ))}
             </Picker>
           </View>
-          </View>
+          </View> */}
         </View>
+        <View style={styles.birthDateSection}>
+            <Text style={styles.birthDateLabel}>Birth Date</Text>
+            <View style={styles.birthDateContainer}>
+              <SelectDropdown
+                data={days}
+                defaultButtonText="Day" // Optional: to preselect a default value
+                onSelect={(selectedItem, index) => setDay(selectedItem)}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+                rowTextForSelection={(item, index) => item}
+                buttonStyle={styles.dropdownBtnStyle}
+                buttonTextStyle={styles.dropdownBtnTxtStyle}
+                renderDropdownIcon={(isOpened) => {
+                  return <FontAwesomeIcon icon={faChevronDown} color={"#444"} size={18} />;
+                }}
+                dropdownStyle={styles.dropdownDropdownStyle}
+              />
+              <SelectDropdown
+                data={months}
+                defaultButtonText="Month"// Optional
+                onSelect={(selectedItem, index) => setMonth(selectedItem)}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+                rowTextForSelection={(item, index) => item}
+                buttonStyle={styles.dropdownBtnStyle}
+                buttonTextStyle={styles.dropdownBtnTxtStyle}
+                renderDropdownIcon={(isOpened) => {
+                  return <FontAwesomeIcon icon={faChevronDown} color={"#444"} size={18} />
+                }}
+                dropdownStyle={styles.dropdownDropdownStyle}
+              />
+              <SelectDropdown
+                data={years}
+                defaultButtonText="Year" // Optional
+                onSelect={(selectedItem, index) => setYear(selectedItem)}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+                rowTextForSelection={(item, index) => item}
+                buttonStyle={styles.dropdownBtnStyle}
+                buttonTextStyle={styles.dropdownBtnTxtStyle}
+                renderDropdownIcon={(isOpened) => {
+                  return <FontAwesomeIcon icon={faChevronDown} color={"#444"} size={18} />;
+                }}
+                dropdownStyle={styles.dropdownDropdownStyle}
+              />
+            </View>
+          </View>
 
       </ScrollView>
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Main')}>
-          {/* <View style={styles.overlapGroup}> */}
-            {/* <View style={styles.rectangle} /> */}
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserGoal')}>
             <Text style={styles.textWrapper}>Plan Your Wellness</Text>
-          {/* </View> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -182,7 +226,7 @@ const styles = StyleSheet.create({
       marginVertical: 10,
     },
     label: {
-      fontSize: 16,
+      fontSize: 32,
       color: '#000000',
       marginBottom: 5,
     },
@@ -196,30 +240,41 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
 
-birthDateSection: {
-    width: '85%', // Match the width with text input containers
-    marginVertical: 10, // Add some vertical margin for spacing
-    alignItems: 'center', // Center align the items
-  },
-  
-  birthDateLabel: {
-    fontSize: 16,
-    color: '#000000',
-    alignSelf: 'flex-start', // Align the label to the start of the container
-    marginBottom: 10, // Add a margin at the bottom of the label for spacing
-  },
-  
-  birthDateContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // Even spacing between pickers
-    width: '100%', // Take the full width of the parent container
-  },
-  
-  picker: {
-    height: 40, // Match the height with text inputs
-    flex: 1, // Allows the picker to expand within the container
-
-  },
+    birthDateSection: {
+      width: '85%',
+      marginVertical: 10,
+    },
+    birthDateLabel: {
+      fontSize: 32,
+      color: '#000000',
+      marginBottom: 10,
+    },
+    birthDateContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    dropdownBtnStyle: {
+      width: "30%", // Adjust the width as needed
+      height: 50,
+      backgroundColor: "#FFF",
+      borderRadius: 8,
+    },
+    dropdownBtnTxtStyle: {
+      color: "#000", // Ensure the text is black
+      textAlign: "left",
+    },
+    dropdownDropdownStyle: {
+      backgroundColor: "#EFEFEF",
+    },
+    dropdownRowStyle: {
+      backgroundColor: "#EFEFEF",
+      borderBottomColor: "#C5C5C5",
+    },
+    dropdownRowTxtStyle: {
+      color: "#444",
+      textAlign: "left",
+    },
   bottomButton: {
     backgroundColor: '#000000',
     borderRadius: 20,
