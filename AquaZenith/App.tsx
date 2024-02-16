@@ -31,6 +31,7 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons/faHouse'
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear'
 import { faPersonWalking } from '@fortawesome/free-solid-svg-icons/faPersonWalking'
 import ExercisePage from './components/ExercisePage';
+import UserGoal from './components/UserGoal';
 
 const options = {
   permissions: {
@@ -52,6 +53,7 @@ export type RootStackParamList = {
   Welcome: undefined;
   Main: undefined;
   UserInfo: undefined;
+  UserGoal:undefined;
 };
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -104,6 +106,7 @@ function App(): React.JSX.Element {
     <Stack.Navigator initialRouteName="Welcome" screenOptions={{headerShown: false}}>
         <Stack.Screen name="Welcome" component={WelcomePage} />
         <Stack.Screen name="UserInfo" component={UserInfo} />
+        <Stack.Screen name="UserGoal" component={UserGoal} />
         <Stack.Screen name="Main" component={MainTabs} />
       </Stack.Navigator>
     </NavigationContainer>
