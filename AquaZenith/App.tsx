@@ -30,8 +30,10 @@ import UserInfo from './components/UserInfo';
 import { faHouse } from '@fortawesome/free-solid-svg-icons/faHouse'
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear'
 import { faPersonWalking } from '@fortawesome/free-solid-svg-icons/faPersonWalking'
+import { faDroplet } from '@fortawesome/free-solid-svg-icons/faDroplet'
 import ExercisePage from './components/ExercisePage';
 import UserGoal from './components/UserGoal';
+import WaterPage from './components/WaterPage';
 
 const options = {
   permissions: {
@@ -79,6 +81,15 @@ function MainTabs() {
       }}
       />
       
+      <Tab.Screen name="Hydation" 
+      component={WaterPage}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <FontAwesomeIcon icon={faDroplet} color={color} size={size} />
+        ),
+      }}
+       />
+
       <Tab.Screen name="Settings" 
       component={SettingsScreen}
       options={{
@@ -86,7 +97,7 @@ function MainTabs() {
           <FontAwesomeIcon icon={faGear} color={color} size={size} />
         ),
       }}
-       />
+      />
 
 
       
