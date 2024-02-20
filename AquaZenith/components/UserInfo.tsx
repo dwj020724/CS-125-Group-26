@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserService from './UserService';
 import {
+  Alert,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -15,7 +18,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
-// import { Picker } from '@react-native-picker/picker';
+
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import SelectDropdown from 'react-native-select-dropdown';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons/faChevronDown'
@@ -30,47 +33,43 @@ type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-// function Section({children, title}: SectionProps): React.JSX.Element {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   return (
-//     <View style={styles.sectionContainer}>
-//       <Text
-//         style={[
-//           styles.sectionTitle,
-//           {
-//             color: isDarkMode ? Colors.white : Colors.black,
-//           },
-//         ]}>
-//         {title}
-//       </Text>
-//       <Text
-//         style={[
-//           styles.sectionDescription,
-//           {
-//             color: isDarkMode ? Colors.light : Colors.dark,
-//           },
-//         ]}>
-//         {children}
-//       </Text>
-//     </View>
-//   );
-// }
-
 function UserInfo(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<UserInfoScreenProp>();
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
+  const [birth_day, setDay] = useState('');
+  const [birth_month, setMonth] = useState('');
+  const [birth_year, setYear] = useState('');
+  const [name, setName] = useState(UserService.name);
+  const [weight, setWeight] = useState(UserService.weight);
+  const [height, setHeight] = useState(UserService.height);
+
 
   // Generate arrays for days, months, and years
   const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
   const months = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
   const years = Array.from({ length: 101 }, (_, i) => `${new Date().getFullYear() - i}`);
 
-//   const backgroundStyle = {
-//     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-//   };
+  // Function to save the user's information
+  const saveUserInfo = async () => {
+    try {
+      // Storing each piece of information with a unique key
+      const birthDate = birth_month + "/" + birth_day + ", " + birth_year;
+      UserService.setInfo(name, weight, height, birthDate)
+      // Alert.alert('Your wellness plan is ready!');
+      
+    } catch (error) {
+      // Alert.alert('Failed to save user information');
+    }
+  };
+
+  const handlePress = async () => {
+    await saveUserInfo();
+    await UserService.saveInfoToStorage();
+    navigation.navigate('UserGoal');
+    console.log(`Name: ${name}, Weight: ${weight}, Height: ${height}, Birth Date: ${birth_month}/${birth_day}, ${birth_year}`);
+    // console.log(name);
+  };
+  
 const backgroundStyle = {
     backgroundColor: isDarkMode ? '#09dbcf' : '#09dbcf', // Adjusted to use a single color for simplicity
       
@@ -83,48 +82,32 @@ return (
           <Text style={styles.textWrapper2}>Tell us about you...</Text>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Name</Text>
-            <TextInput style={styles.input} placeholder="Type here" />
+            <TextInput 
+          style={styles.input} 
+          placeholder="Type here" 
+          value={name}
+          onChangeText={setName} // Update state on change
+        />
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Weight</Text>
-            <TextInput style={styles.input} placeholder="Type here in pounds" keyboardType="numeric" />
+            <TextInput 
+          style={styles.input} 
+          placeholder="Type here in pounds" 
+          keyboardType="numeric" 
+          value={weight}
+          onChangeText={setWeight} // Update state on change
+        />
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Height</Text>
-            <TextInput style={styles.input} placeholder="Type here in feet and inches" keyboardType="numeric" />
+            <TextInput 
+          style={styles.input} 
+          placeholder="Type here in feet and inches" 
+          value={height}
+          onChangeText={setHeight} // Update state on change
+        />
           </View>
-          {/* <View style={styles.birthDateSection}>
-            <Text style={styles.birthDateLabel}>Birth Date</Text>
-            <View style={styles.birthDateContainer}>
-            <Picker
-              selectedValue={day}
-              style={styles.picker}
-              onValueChange={(itemValue, itemIndex) => setDay(itemValue)}>
-              <Picker.Item label="Day" value="" />
-              {days.map(day => (
-                <Picker.Item key={day} label={day} value={day} />
-              ))}
-            </Picker>
-            <Picker
-              selectedValue={month}
-              style={styles.picker}
-              onValueChange={(itemValue, itemIndex) => setMonth(itemValue)}>
-              <Picker.Item label="Month" value="" />
-              {months.map(month => (
-                <Picker.Item key={month} label={month} value={month} />
-              ))}
-            </Picker>
-            <Picker
-              selectedValue={year}
-              style={styles.picker}
-              onValueChange={(itemValue, itemIndex) => setYear(itemValue)}>
-              <Picker.Item label="Year" value="" />
-              {years.map(year => (
-                <Picker.Item key={year} label={year} value={year} />
-              ))}
-            </Picker>
-          </View>
-          </View> */}
         </View>
         <View style={styles.birthDateSection}>
             <Text style={styles.birthDateLabel}>Birth Date</Text>
@@ -132,6 +115,7 @@ return (
               <SelectDropdown
                 data={days}
                 defaultButtonText="Day" // Optional: to preselect a default value
+                
                 onSelect={(selectedItem, index) => setDay(selectedItem)}
                 buttonTextAfterSelection={(selectedItem, index) => selectedItem}
                 rowTextForSelection={(item, index) => item}
@@ -173,7 +157,7 @@ return (
 
       </ScrollView>
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserGoal')}>
+        <TouchableOpacity style={styles.button} onPress={handlePress}>
             <Text style={styles.textWrapper}>Plan Your Wellness</Text>
         </TouchableOpacity>
       </View>

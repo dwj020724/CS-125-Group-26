@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserService from './UserService';
 import {
   SafeAreaView,
   ScrollView,
@@ -30,35 +32,13 @@ type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-// function Section({children, title}: SectionProps): React.JSX.Element {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   return (
-//     <View style={styles.sectionContainer}>
-//       <Text
-//         style={[
-//           styles.sectionTitle,
-//           {
-//             color: isDarkMode ? Colors.white : Colors.black,
-//           },
-//         ]}>
-//         {title}
-//       </Text>
-//       <Text
-//         style={[
-//           styles.sectionDescription,
-//           {
-//             color: isDarkMode ? Colors.light : Colors.dark,
-//           },
-//         ]}>
-//         {children}
-//       </Text>
-//     </View>
-//   );
-// }
 
 function UserGoal(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<UserInfoScreenProp>();
+  const [water_intake, setWater_intake] = useState('');
+  const [exercise_min, setExercise_min] = useState('');
+  const [calorie, setCalorie] = useState('');
   const [bedHour, setBedHour] = useState('');
   const [bedMinute, setBedMinute] = useState('');
   const [wakeHour, setWakeHour] = useState('');
@@ -67,24 +47,30 @@ function UserGoal(): React.JSX.Element {
   const hours = Array.from({ length: 24 }, (_, i) => (i < 10 ? `0${i}` : `${i}`));
   const minutes = Array.from({ length: 60 }, (_, i) => (i < 10 ? `0${i}` : `${i}`));
   
+  const saveUserInfo = async () => {
+    try {
+      // Storing each piece of information with a unique key
+      const bedTime = bedHour + ":" + bedMinute;
+      const wakeTime = wakeHour + ":" + wakeMinute;
+      UserService.setGoal(water_intake, exercise_min, calorie, bedTime, wakeTime);
+    } catch (error) {
+    }
+  };
 
-//   const backgroundStyle = {
-//     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-//   };
+  const handlePress = async () => {
+    await saveUserInfo();
+    await UserService.saveGoalToStorage();
+    navigation.navigate('Main');
+    console.log(`Water intake: ${water_intake}, Exercise minutes: ${exercise_min}, Calorie: ${calorie},
+    Go to sleep at ${bedHour}:${bedMinute}, Waking up at ${wakeHour}:${wakeMinute}.`);
+    // console.log(name);
+  };
+  
 const backgroundStyle = {
     backgroundColor: isDarkMode ? '#09dbcf' : '#09dbcf', // Adjusted to use a single color for simplicity
     
 };
 
-// const generatePickerItems = (start, end) => {
-//   let items = [];
-//   for (let i = start; i <= end; i++) {
-//     let value = i.toString();
-//     if (value.length === 1) value = '0' + value; // Adding leading zero for single digits
-//     items.push(<Picker.Item label={value} value={value} key={i} />);
-//   }
-//   return items;
-// };
 
 return (
   <View style={[styles.userInformation, backgroundStyle]}>
@@ -93,15 +79,15 @@ return (
         <Text style={styles.textWrapper2}>What's your goal?</Text>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Daily Water Intake</Text>
-          <TextInput style={styles.input} placeholder="Type here in ml" keyboardType="numeric" />
+          <TextInput style={styles.input} placeholder="Type here in ml" keyboardType="numeric" onChangeText={setWater_intake}/>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Daily Exercise Time</Text>
-          <TextInput style={styles.input} placeholder="Type here in minutes" keyboardType="numeric" />
+          <TextInput style={styles.input} placeholder="Type here in minutes" keyboardType="numeric" onChangeText={setExercise_min}/>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Daily Calorie Burn</Text>
-          <TextInput style={styles.input} placeholder="Type here in cal" keyboardType="numeric" />
+          <TextInput style={styles.input} placeholder="Type here in cal" keyboardType="numeric" onChangeText={setCalorie} />
         </View>
       </View>
       <View style={styles.sectionContainer}>
@@ -204,7 +190,7 @@ return (
         </View>
     </ScrollView>
     <View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Main')}>
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
           <Text style={styles.textWrapper}>Plan Your Wellness</Text>
       </TouchableOpacity>
     </View>

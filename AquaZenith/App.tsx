@@ -22,13 +22,13 @@ import {
 } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import SettingsScreen from './components/SettingsScreen';
+import ProfilePage from './components/ProfilePage';
 import SummaryScreen from './components/SummaryScreen';
 import WelcomePage from './components/WelcomePage';
 import UserInfo from './components/UserInfo';
 
 import { faHouse } from '@fortawesome/free-solid-svg-icons/faHouse'
-import { faGear } from '@fortawesome/free-solid-svg-icons/faGear'
+import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
 import { faPersonWalking } from '@fortawesome/free-solid-svg-icons/faPersonWalking'
 import { faDroplet } from '@fortawesome/free-solid-svg-icons/faDroplet'
 import ExercisePage from './components/ExercisePage';
@@ -63,14 +63,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 function MainTabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Summary" 
+      {/* <Tab.Screen name="Summary" 
       component={SummaryScreen}
       options={{
         tabBarIcon: ({ color, size }) => (
           <FontAwesomeIcon icon={faHouse} color={color} size={size} />
         ),
       }}
-      />
+      /> */}
 
       <Tab.Screen name="Exercise" 
       component={ExercisePage}
@@ -90,11 +90,11 @@ function MainTabs() {
       }}
        />
 
-      <Tab.Screen name="Settings" 
-      component={SettingsScreen}
+      <Tab.Screen name="Profile" 
+      component={ProfilePage}
       options={{
         tabBarIcon: ({ color, size }) => (
-          <FontAwesomeIcon icon={faGear} color={color} size={size} />
+          <FontAwesomeIcon icon={faUser} color={color} size={size} />
         ),
       }}
       />
