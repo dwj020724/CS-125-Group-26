@@ -1,13 +1,14 @@
 import React, { Component, useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, ActivityIndicator, Dimensions} from 'react-native';
 import AppleHealthKit, { HealthActivitySummary, HealthInputOptions, HealthObserver, HealthUnit, HealthValue } from 'react-native-health';
+import SleepData from './SleepPage';
 
 
 
 // Define an interface for the component's state
 interface HealthDataBoxComponentState {
   activity_samples: Array<HealthActivitySummary> | null;
-  sleep_sample: Array<HealthValue> | null;
+  sleep_sample: any | null;
   water_sample: string | null;
   loading: boolean;
   error: string | null;
@@ -99,7 +100,12 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
                     return
                 }
                 
-                this.setState({ sleep_sample: results, loading: false }); 
+                
+                const transformedData = this.transformSleepData(results);
+                // transformedData.datasets.forEach((dataset, index) => {
+                //     console.log(`Dataset ${index}:`, dataset);
+                //   });
+                this.setState({ sleep_sample: transformedData, loading: false }); 
             },
         )
     }
@@ -130,40 +136,102 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
     
   };
 
+  transformSleepData = (results:any) =>{
+    interface DataByDate {
+        [key: string]: number; // String keys, number values
+    }      
+
+    let dataByDate:DataByDate = {};
+
+    results.forEach((entry:any) => {
+    const endDate:any = new Date(entry.endDate);
+    const startDate:any = new Date(entry.startDate);
+    const sleepDuration = (endDate - startDate ) / (1000 * 60 * 60); // Convert ms to hours
+
+    const dateKey = endDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+    if (dataByDate[dateKey]) {
+        dataByDate[dateKey] += sleepDuration;
+    } else {
+        dataByDate[dateKey] = sleepDuration;
+    }
+    });
+
+    const labels = Object.keys(dataByDate);
+    const data = Object.values(dataByDate);
+
+    return {
+    labels,
+    datasets: [{ data }]
+    };
+  }
+
   render() {
     
     const { activity_samples, sleep_sample, water_sample, loading, error } = this.state;
 
     if(this.props.type == "Calories"){
+            // Initialize a variable to hold the display message
+        let caloriesMessage = "No data"; // Default message if there's no data
+
+        // Check if activity_samples exists and has at least one entry
+        if (activity_samples && activity_samples.length > 0) {
+            // Safely access the last item's activeEnergyBurned property
+            const lastSample = activity_samples[activity_samples.length - 1];
+            caloriesMessage = `${lastSample.activeEnergyBurned} cal`; // Update the message with the last sample's value
+        } else {
+            caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
+        }
+
         return (
             <View style={[styles.metricCard, styles.cardHeartRate]}>
                 {/* <Image style={styles.icon} source={require('./path/to/your/heart_icon.png')} /> */}
                 <Text style={styles.metricTitle}>{this.props.type}</Text>
                 <Text style={styles.metricValue}>
-                    {activity_samples ? activity_samples[activity_samples.length-1].activeEnergyBurned + " cal": "error"}
+                    {caloriesMessage}
                 </Text>
             </View>
         );
     }
     else if(this.props.type == "Exercise"){
+            // Initialize a variable to hold the display message
+        let caloriesMessage = "No data"; // Default message if there's no data
+
+        // Check if activity_samples exists and has at least one entry
+        if (activity_samples && activity_samples.length > 0) {
+            // Safely access the last item's activeEnergyBurned property
+            const lastSample = activity_samples[activity_samples.length - 1];
+            caloriesMessage = `${lastSample.appleExerciseTime} min`; // Update the message with the last sample's value
+        } else {
+            caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
+        }
+
         return (
-            <View style={[styles.metricCard, styles.cardExercise]}>
+            <View style={[styles.metricCard, styles.cardHeartRate]}>
                 {/* <Image style={styles.icon} source={require('./path/to/your/heart_icon.png')} /> */}
                 <Text style={styles.metricTitle}>{this.props.type}</Text>
                 <Text style={styles.metricValue}>
-                    {activity_samples ? activity_samples[activity_samples.length-1].appleExerciseTime + " min": "error"}
+                    {caloriesMessage}
                 </Text>
             </View>
         );
     }
     else if(this.props.type == "Sleep"){
+        let sleepMessage = "No data"; // Default message if there are no samples
+
+        if (sleep_sample != null) { // This checks for both null and undefined
+            const sleepDuration = sleep_sample.datasets?.[0]?.data?.[0]; // Safely accessing the first data point
+            if (typeof sleepDuration === 'number') {
+                sleepMessage = `${sleepDuration.toFixed(1)} Hours`;
+            }
+        }
+
         return (
             <View style={[styles.metricCard, styles.cardSleep]}>
                 {/* <Image style={styles.icon} source={require('./path/to/your/heart_icon.png')} /> */}
                 <Text style={styles.metricTitle}>{this.props.type}</Text>
-                <Text style={styles.metricValue}>
-                    {sleep_sample ? sleep_sample[sleep_sample.length-1].value + " Hours": "error"}
-                </Text>
+                <Text style={styles.metricValue}>{sleepMessage}</Text>
+                {/* {sleep_sample ? sleep_sample[sleep_sample.length-1].value + " Hours": "error"} */}
             </View>
         );
     }

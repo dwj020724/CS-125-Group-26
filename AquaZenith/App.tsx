@@ -39,8 +39,8 @@ import SleepPage from './components/SleepPage';
 
 const options = {
   permissions: {
-    read: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.Water, AppleHealthKit.Constants.Permissions.SleepAnalysis, AppleHealthKit.Constants.Permissions.ActivitySummary],
-    write: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.Water, AppleHealthKit.Constants.Permissions.SleepAnalysis, AppleHealthKit.Constants.Permissions.ActivitySummary],
+    read: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.Water, AppleHealthKit.Constants.Permissions.SleepAnalysis, AppleHealthKit.Constants.Permissions.ActivitySummary, AppleHealthKit.Constants.Permissions.AppleExerciseTime],
+    write: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.Water, AppleHealthKit.Constants.Permissions.SleepAnalysis, AppleHealthKit.Constants.Permissions.ActivitySummary, AppleHealthKit.Constants.Permissions.AppleExerciseTime],
   },
 };
 
@@ -65,14 +65,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 function MainTabs() {
   return (
     <Tab.Navigator>
-      {/* <Tab.Screen name="Summary" 
+      <Tab.Screen name="Summary" 
       component={SummaryScreen}
       options={{
         tabBarIcon: ({ color, size }) => (
           <FontAwesomeIcon icon={faHouse} color={color} size={size} />
         ),
       }}
-      /> */}
+      />
 
       <Tab.Screen name="Exercise" 
       component={ExercisePage}
