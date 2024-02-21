@@ -31,9 +31,11 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons/faHouse'
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
 import { faPersonWalking } from '@fortawesome/free-solid-svg-icons/faPersonWalking'
 import { faDroplet } from '@fortawesome/free-solid-svg-icons/faDroplet'
+import { faBed } from '@fortawesome/free-solid-svg-icons/faBed'
 import ExercisePage from './components/ExercisePage';
 import UserGoal from './components/UserGoal';
 import WaterPage from './components/WaterPage';
+import SleepPage from './components/SleepPage';
 
 const options = {
   permissions: {
@@ -86,6 +88,15 @@ function MainTabs() {
       options={{
         tabBarIcon: ({ color, size }) => (
           <FontAwesomeIcon icon={faDroplet} color={color} size={size} />
+        ),
+      }}
+       />
+
+    <Tab.Screen name="Sleep" 
+      component={SleepPage}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <FontAwesomeIcon icon={faBed} color={color} size={size} />
         ),
       }}
        />
