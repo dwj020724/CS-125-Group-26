@@ -17,37 +17,12 @@ import {
 
 import HealthDataComponent from './HealthDataComponent';
 import HealthDataBoxComponent from './HealthDataBoxComponent';
+import UserService from './UserService';
 
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
-
-// function Section({children, title}: SectionProps): React.JSX.Element {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   return (
-//     <View style={styles.sectionContainer}>
-//       <Text
-//         style={[
-//           styles.sectionTitle,
-//           {
-//             color: isDarkMode ? Colors.white : Colors.black,
-//           },
-//         ]}>
-//         {title}
-//       </Text>
-//       <Text
-//         style={[
-//           styles.sectionDescription,
-//           {
-//             color: isDarkMode ? Colors.light : Colors.dark,
-//           },
-//         ]}>
-//         {children}
-//       </Text>
-//     </View>
-//   );
-// }
 
 function SummaryScreen(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -59,31 +34,11 @@ function SummaryScreen(): React.JSX.Element {
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
     <SafeAreaView style={[backgroundStyle, { flex: 0, backgroundColor: '#FFFFFF' }]}>
-
-        {/* <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        /> */}
-        <ScrollView>
-          {/* <ScrollView contentContainerStyle={styles.container}> */}
-          {/* <View
-            style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            }}>
-            <Section title="Activity">
-              <HealthDataComponent/>
-            </Section>
-            <Section title="Sleep">
-              Get data from health app and display it <Text style={styles.highlight}>here</Text>.
-            </Section>
-            <Section title="Water">
-              Get data from health app and display it <Text style={styles.highlight}>here</Text>.
-            </Section>
-          </View> */}
+    <ScrollView>
       <View style={styles.iphoneProMax}>
       <View style={styles.topLeftContainer}>
             <Text style={styles.helloText}>Hello,</Text>
-            <Text style={styles.nameText}>Chris</Text>
+            <Text style={styles.nameText}>{UserService.name}</Text>
           </View>
         <View style={styles.alertContainer}>
           <Image style={styles.alertIcon} source={require('../alertimage.png')} />

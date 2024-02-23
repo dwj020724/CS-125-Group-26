@@ -52,23 +52,24 @@ function ExercisePage(): React.JSX.Element {
   };
 
   return (
-      <SafeAreaView style={backgroundStyle}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={backgroundStyle}>
+      // <SafeAreaView style={backgroundStyle}>
+      //   <StatusBar
+      //     barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      //     backgroundColor={backgroundStyle.backgroundColor}
+      //   />
+      //   <ScrollView
+      //     contentInsetAdjustmentBehavior="automatic"
+      //     style={backgroundStyle}>
           
-          <View
-            style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            }}>
-                 <HealthDataComponent/>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      //     <View
+      //       style={{
+      //         backgroundColor: isDarkMode ? Colors.black : Colors.white,
+      //       }}>
+      //            <HealthDataComponent/>
+      //     </View>
+      //   </ScrollView>
+      // </SafeAreaView>
+      <HealthDataComponent/>
   );
 }
 

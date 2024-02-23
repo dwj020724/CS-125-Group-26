@@ -9,10 +9,7 @@ import {
   } from 'react-native/Libraries/NewAppScreen';
   
 interface HealthDataComponentState {
-    hydrationData: Array<{
-        startDate: string;
-        value: number; // Adjust the type based on the actual data structure for water intake (in liters or ml)
-      }> | null;
+    hydrationData: any | null;
     loading: boolean;
     error: string | null;
   }
@@ -34,44 +31,85 @@ interface HealthDataComponentState {
     }
 
     loadHydrationData = () => {
-        this.setState({ loading: true, error: null });
-        let options: HealthInputOptions = {
-            startDate: new Date(2024, 1, 1).toISOString(), //start date = yesterday
-            endDate: new Date().toISOString(), // end date = now
-            includeManuallyAdded: true // optional: default true
-        };
-        AppleHealthKit.getWaterSamples(
-            options,
-            (err: any, results: Array<{ startDate: string; value: number }>) => {
-              if (err) {
-                this.setState({ loading: false, error: 'Failed to load data' });
-                return;
-              }
-              const hydrationData = results.map(entry => ({
-                ...entry,
-                value: Math.round(entry.value * 1000) // Convert to milliliters if necessary
-              }));
-            //   console.log('Hydration data loaded:', hydrationData);
-              this.setState({ hydrationData, loading: false });
-            },
-          );
-        };
+      var lastWeekDate = new Date();
+      lastWeekDate.setDate(lastWeekDate.getDate() - 7);// get yesterdays date
+
+      this.setState({ loading: true, error: null });
+      let options: HealthInputOptions = {
+          startDate: lastWeekDate.toISOString(), //start date = yesterday
+          endDate: new Date().toISOString(), // end date = now
+          includeManuallyAdded: true // optional: default true
+      };
+      AppleHealthKit.getWaterSamples(
+          options,
+          (err: any, results: Array<{ startDate: string; value: number }>) => {
+            if (err) {
+              this.setState({ loading: false, error: 'Failed to load data' });
+              return;
+            }
+            // const hydrationData = results.map(entry => ({
+            //   ...entry,
+            //   value: Math.round(entry.value * 1000) // Convert to milliliters if necessary
+            // }));
+            const hydrationData = this.transformWaterData(results);
+            this.setState({ hydrationData, loading: false });
+          },
+        );
+      };
     
+    transformWaterData = (results:Array<{ startDate: string; value: number; }>) =>{
+      interface DataByDate {
+          [key: string]: number; // String keys, number values
+      }      
+  
+      let dataByDate:DataByDate = {};
+  
+      results.forEach((entry:any) => {
+      const endDate:any = new Date(entry.endDate);
+      const startDate:any = new Date(entry.startDate);
+      // const exerciseSample = entry.value * 33.814; //convert to fl oz
+      const exerciseSample = entry.value * 1000; //convert to fl oz
+      
+  
+      const dateKey = endDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+      var dayNamekey = this.getDayNames(dateKey)
+      if (dataByDate[dayNamekey]) {
+          dataByDate[dayNamekey] += exerciseSample;
+      } else {
+          dataByDate[dayNamekey] = exerciseSample;
+      }
+      });
+      
+      const labels = Object.keys(dataByDate);
+      const data = Object.values(dataByDate);
+  
+      return {
+      labels,
+      datasets: [{ data }]
+      };
+    }
+
+    getDayNames = (dateStr:string) => {
+      var date = new Date(dateStr);
+      date.setDate(date.getDate()+1) // for some reason the datestr gets -1'd when made into new date so add 1.
+      return date.toLocaleDateString("en-US", { weekday: 'short' });        
+    }
+
     
     renderChart() {
         const { hydrationData } = this.state;
         if (!hydrationData) return null;
     
-        const chartData = {
-            labels: hydrationData.map(entry => {
-              // Convert the startDate to a Date object and format it
-              const date = new Date(entry.startDate);
-              return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
-            }),
-            datasets: [{
-              data: hydrationData.map(entry => entry.value)
-            }]
-          };
+        // const chartData = {
+        //     labels: hydrationData.map(entry => {
+        //       // Convert the startDate to a Date object and format it
+        //       const date = new Date(entry.startDate);
+        //       return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+        //     }),
+        //     datasets: [{
+        //       data: hydrationData.map(entry => entry.value)
+        //     }]
+        //   };
         // console.log(chartData);
 
         const chartConfig = {
@@ -101,7 +139,7 @@ interface HealthDataComponentState {
               style={{
                 borderRadius: 16
               }}
-              data={chartData}
+              data={hydrationData}
               width={Dimensions.get('window').width - 40} // Adjust based on your styles
               height={220}
               yAxisLabel=""
@@ -113,28 +151,28 @@ interface HealthDataComponentState {
           );
         }
     render() {
-        const { hydrationData, loading, error } = this.state;
-        const formatDate = (dateString: string) => {
-            const options: Intl.DateTimeFormatOptions = {
-              year: 'numeric', 
-              month: '2-digit', 
-              day: '2-digit',
-            };
-            return new Date(dateString).toLocaleDateString('en-CA', options); // 'en-CA' uses the YYYY/MM/DD format
+      const { hydrationData, loading, error } = this.state;
+      const formatDate = (dateString: string) => {
+          const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric', 
+            month: '2-digit', 
+            day: '2-digit',
           };
-        return (
+          return new Date(dateString).toLocaleDateString('en-CA', options); // 'en-CA' uses the YYYY/MM/DD format
+        };
+      return (
         <View style={styles.container}>
-      <Text style={styles.titleText}>Hydration Data</Text>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      {error && <Text style={styles.errorText}>{error}</Text>}
-      {hydrationData && this.renderChart()}
-      {hydrationData && hydrationData.map((entry, index) => (
-        <Text key={index} style={styles.stepCountText}>
-          {formatDate(entry.startDate)} - {entry.value} mL
-        </Text>
-      ))}
-      <Button title="Refresh Data" onPress={this.loadHydrationData} color="#841584" />
-    </View>
+          <Text style={styles.titleText}>Hydration Data</Text>
+          {loading && <ActivityIndicator size="large" color="#0000ff" />}
+          {error && <Text style={styles.errorText}>{error}</Text>}
+          {hydrationData && this.renderChart()}
+          {/* {hydrationData && hydrationData.map((entry, index) => (
+            <Text key={index} style={styles.stepCountText}>
+              {formatDate(entry.startDate)} - {entry.value} mL
+            </Text>
+          ))} */}
+          <Button title="Refresh Data" onPress={this.loadHydrationData} color="#841584" />
+        </View>
         );
     }
 }
@@ -147,23 +185,24 @@ function WaterPage(): React.JSX.Element {
     };
   
     return (
-        <SafeAreaView style={backgroundStyle}>
-          <StatusBar
-            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-            backgroundColor={backgroundStyle.backgroundColor}
-          />
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            style={backgroundStyle}>
+        // <SafeAreaView style={backgroundStyle}>
+        //   <StatusBar
+        //     barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        //     backgroundColor={backgroundStyle.backgroundColor}
+        //   />
+        //   <ScrollView
+        //     contentInsetAdjustmentBehavior="automatic"
+        //     style={backgroundStyle}>
             
-            <View
-              style={{
-                backgroundColor: isDarkMode ? Colors.black : Colors.white,
-              }}>
-                   <WaterData/>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
+        //     <View
+        //       style={{
+        //         backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        //       }}>
+        //            <WaterData/>
+        //     </View>
+        //   </ScrollView>
+        // </SafeAreaView>
+        <WaterData/>
     );
   }
 const styles = StyleSheet.create({

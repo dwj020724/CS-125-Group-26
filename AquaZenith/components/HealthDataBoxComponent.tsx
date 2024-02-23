@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, ActivityIndicator, Dimensions} from 'react-native';
 import AppleHealthKit, { HealthActivitySummary, HealthInputOptions, HealthObserver, HealthUnit, HealthValue } from 'react-native-health';
-import SleepData from './SleepPage';
+import UserService from './UserService';
 
 
 
@@ -178,7 +178,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
         if (activity_samples && activity_samples.length > 0) {
             // Safely access the last item's activeEnergyBurned property
             const lastSample = activity_samples[activity_samples.length - 1];
-            caloriesMessage = `${lastSample.activeEnergyBurned} cal`; // Update the message with the last sample's value
+            caloriesMessage = `${lastSample.activeEnergyBurned}/${UserService.calorieBurn} cal`; // Update the message with the last sample's value
         } else {
             caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
         }
@@ -201,7 +201,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
         if (activity_samples && activity_samples.length > 0) {
             // Safely access the last item's activeEnergyBurned property
             const lastSample = activity_samples[activity_samples.length - 1];
-            caloriesMessage = `${lastSample.appleExerciseTime} min`; // Update the message with the last sample's value
+            caloriesMessage = `${lastSample.appleExerciseTime}/${UserService.exerciseMin} min`; // Update the message with the last sample's value
         } else {
             caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
         }

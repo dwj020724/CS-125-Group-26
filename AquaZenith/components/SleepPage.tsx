@@ -14,10 +14,13 @@ const SleepData = () => {
   }, []);
 
   const loadSleepData = () => {
+    var lastWeekDate = new Date();
+    lastWeekDate.setDate(lastWeekDate.getDate() - 7);// get yesterdays date
+
     setLoading(true);
     setError(null);
     const options = {
-      startDate: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString(), // start date = yesterday
+      startDate: lastWeekDate.toISOString(), // start date = yesterday
       endDate: new Date().toISOString(), // end date = now
       includeManuallyAdded: true,
     };
@@ -33,20 +36,24 @@ const SleepData = () => {
     });
   };
 
-  const transformSleepData = (sleepData) => {
-    let dataByDate = {};
+  const transformSleepData = (sleepData:Array<{ startDate: string; value: number; }>) => {
+    interface DataByDate {
+      [key: string]: number; // String keys, number values
+    }      
 
-    sleepData.forEach((entry) => {
-      const endDate = new Date(entry.endDate);
-      const startDate = new Date(entry.startDate);
+    let dataByDate:DataByDate = {};
+
+    sleepData.forEach((entry:any) => {
+      const endDate:any = new Date(entry.endDate);
+      const startDate:any = new Date(entry.startDate);
       const sleepDuration = (endDate - startDate) / (1000 * 60 * 60); // Convert ms to hours
 
       const dateKey = endDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-      if (dataByDate[dateKey]) {
-        dataByDate[dateKey] += sleepDuration;
+      var dayNamekey = getDayNames(dateKey)
+      if (dataByDate[dayNamekey]) {
+        dataByDate[dayNamekey] += sleepDuration;
       } else {
-        dataByDate[dateKey] = sleepDuration;
+        dataByDate[dayNamekey] = sleepDuration;
       }
     });
 
@@ -57,6 +64,12 @@ const SleepData = () => {
       labels,
       datasets: [{ data }]
     };
+  };
+
+  const getDayNames = (dateStr:string) => {
+    var date = new Date(dateStr);
+    date.setDate(date.getDate()+1) // for some reason the datestr gets -1'd when made into new date so add 1.
+    return date.toLocaleDateString("en-US", { weekday: 'short' });        
   };
 
   const chartConfig = {
@@ -80,10 +93,10 @@ const SleepData = () => {
   };
   
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(dateString).toLocaleDateString('en-CA', options); // 'en-CA' uses the YYYY/MM/DD format
-  };
+  // const formatDate = (dateString:any) => {
+  //   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  //   return new Date(dateString).toLocaleDateString('en-CA', options); // 'en-CA' uses the YYYY/MM/DD format
+  // };
 
   return (
     <View style={styles.container}>
@@ -106,11 +119,11 @@ const SleepData = () => {
         }}
       />
       )}
-      {!loading && sleepData.labels.map((label, index) => (
+      {/* {!loading && sleepData.labels.map((label, index) => (
         <Text key={index} style={styles.stepCountText}>
           {formatDate(label)} - {sleepData.datasets[0].data[index].toFixed(2)} hours
         </Text>
-      ))}
+      ))} */}
       <Button title="Refresh Data" onPress={loadSleepData} color="#841584" />
     </View>
   );
