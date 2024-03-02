@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppleHealthKit from 'react-native-health';
 import {
   useColorScheme,
@@ -36,7 +36,9 @@ import ExercisePage from './components/ExercisePage';
 import UserGoal from './components/UserGoal';
 import WaterPage from './components/WaterPage';
 import SleepPage from './components/SleepPage';
-
+import SignInPage from './components/SignIn';
+import {User, onAuthStateChanged} from 'firebase/auth'
+import { FIREBASE_AUTH } from './components/FireBaseConfig';
 const options = {
   permissions: {
     read: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.Water, AppleHealthKit.Constants.Permissions.SleepAnalysis, AppleHealthKit.Constants.Permissions.ActivitySummary, AppleHealthKit.Constants.Permissions.AppleExerciseTime],
@@ -55,6 +57,7 @@ AppleHealthKit.initHealthKit(options, (err, results) => {
 
 export type RootStackParamList = {
   Welcome: undefined;
+  SignIn: undefined;
   Main: undefined;
   UserInfo: undefined;
   UserGoal:undefined;
@@ -122,11 +125,20 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  const [user, setUser] = useState<User | null>(null);
+  
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      console.log('user', user);
+    }
+    )
+  }, [])
 
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
     <Stack.Navigator initialRouteName="Welcome" screenOptions={{headerShown: false}}>
         <Stack.Screen name="Welcome" component={WelcomePage} />
+        <Stack.Screen name="SignIn" component={SignInPage} />
         <Stack.Screen name="UserInfo" component={UserInfo} />
         <Stack.Screen name="UserGoal" component={UserGoal} />
         <Stack.Screen name="Main" component={MainTabs} />

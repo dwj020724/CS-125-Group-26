@@ -67,7 +67,7 @@ const backgroundStyle = {
         <View style={styles.welcomePage}>
           <View style={styles.div}>
             <View style={styles.group}>
-            <TouchableOpacity onPress={() => navigation.navigate('UserInfo')} style={styles.overlapGroup}>
+            <TouchableOpacity onPress={() => navigation.navigate('SignIn')} style={styles.overlapGroup}>
             <View style={styles.rectangle} />
             <Text style={styles.textWrapper}>Get Started Now</Text>
             </TouchableOpacity>
