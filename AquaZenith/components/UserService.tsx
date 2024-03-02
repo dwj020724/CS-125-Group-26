@@ -9,7 +9,8 @@ class UserService {
   exerciseMin: string;
   calorieBurn: string;
   bedTime: string;
-  wakeTime: string;;
+  wakeTime: string;
+  sleepGoal: number;
 
 
   constructor() {
@@ -22,6 +23,7 @@ class UserService {
     this.calorieBurn = '';
     this.bedTime = '';
     this.wakeTime = '';
+    this.sleepGoal = 0;
   }
 
   setInfo(name: string, weight: string, height: string, birthDate: string): void {
@@ -37,6 +39,26 @@ class UserService {
     this.calorieBurn = calorieBurn;
     this.bedTime = bedTime;
     this.wakeTime = wakeTime;
+
+    const [hours1, minutes1] = bedTime.split(':').map(Number);
+    const [hours2, minutes2] = wakeTime.split(':').map(Number);
+
+    // Convert the times to minutes since the start of the day
+    const minutesSinceStartOfDay1 = hours1 * 60 + minutes1;
+    const minutesSinceStartOfDay2 = hours2 * 60 + minutes2;
+
+    // Calculate the difference in minutes
+    let differenceInMinutes: number;
+    if (minutesSinceStartOfDay1 > minutesSinceStartOfDay2) {
+        // Assumes timeStr2 is on the next day
+        differenceInMinutes = (24 * 60 - minutesSinceStartOfDay1) + minutesSinceStartOfDay2;
+    } else {
+        differenceInMinutes = minutesSinceStartOfDay2 - minutesSinceStartOfDay1;
+    }
+
+    // Convert the difference back to hours
+    this.sleepGoal = differenceInMinutes / 60;
+
   }
 
   // Method to save user data to AsyncStorage or any storage

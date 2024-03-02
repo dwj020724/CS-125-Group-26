@@ -5,6 +5,7 @@ import UserService from './UserService';
 
 
 
+
 // Define an interface for the component's state
 interface HealthDataBoxComponentState {
   activity_samples: Array<HealthActivitySummary> | null;
@@ -179,6 +180,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             // Safely access the last item's activeEnergyBurned property
             const lastSample = activity_samples[activity_samples.length - 1];
             caloriesMessage = `${lastSample.activeEnergyBurned}/${UserService.calorieBurn} cal`; // Update the message with the last sample's value
+            (global as any).gHealthDataCalBurn = lastSample.activeEnergyBurned;
         } else {
             caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
         }
@@ -202,6 +204,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             // Safely access the last item's activeEnergyBurned property
             const lastSample = activity_samples[activity_samples.length - 1];
             caloriesMessage = `${lastSample.appleExerciseTime}/${UserService.exerciseMin} min`; // Update the message with the last sample's value
+            (global as any).gHealthDataExerciseMin = lastSample.appleExerciseTime;
         } else {
             caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
         }
@@ -223,6 +226,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             const sleepDuration = sleep_sample.datasets?.[0]?.data?.[0]; // Safely accessing the first data point
             if (typeof sleepDuration === 'number') {
                 sleepMessage = `${sleepDuration.toFixed(1)} Hours`;
+                (global as any).gHealthDataSleepDur = sleepDuration.toFixed(1);
             }
         }
 
@@ -236,6 +240,9 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
         );
     }
     else if(this.props.type == "Hydration"){
+        if (water_sample != null) { // This checks for both null and undefined 
+            (global as any).gHealthDataWaterSam = water_sample;
+        }
         return (
             <View style={[styles.metricCard, styles.cardHydration]}>
                 {/* <Image style={styles.icon} source={require('./path/to/your/heart_icon.png')} /> */}
