@@ -37,7 +37,7 @@ const Login = () => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
-      navigation.navigate('UserInfo');
+      navigation.navigate('Main');
     } catch (error:any){
       console.log(error);
       Alert.alert('Sign in failed' + error.message);
@@ -52,6 +52,7 @@ const Login = () => {
       const response = await createUserWithEmailAndPassword(auth, email, password);
       console.log(response);
       // Alert.alert('Check your email!');
+      navigation.navigate('UserInfo');
     } catch (error:any){
       console.log(error);
       Alert.alert('Sign in failed' + error.message);
