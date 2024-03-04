@@ -18,6 +18,7 @@ import {
 import HealthDataComponent from './HealthDataComponent';
 import HealthDataBoxComponent from './HealthDataBoxComponent';
 import UserService from './UserService';
+import ChatRecommend from './ChatRecommendComponent';
 
 
 type SectionProps = PropsWithChildren<{
@@ -43,7 +44,7 @@ function SummaryScreen(): React.JSX.Element {
         <View style={styles.alertContainer}>
           <Image style={styles.alertIcon} source={require('../alertimage.png')} />
           <Text style={styles.alertText}>
-            You haven’t checked out the app recently. Do some workouts.
+            
           </Text>
         </View>
         <View style={styles.metricsContainer}>
@@ -67,7 +68,7 @@ function SummaryScreen(): React.JSX.Element {
           <HealthDataBoxComponent type='Hydration'/>
           </View>
         </View>
-
+        <ChatRecommend />
       </View>
 
         </ScrollView>
