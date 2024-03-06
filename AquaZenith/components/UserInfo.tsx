@@ -39,12 +39,10 @@ function UserInfo(): React.JSX.Element {
   const [birth_day, setDay] = useState('');
   const [birth_month, setMonth] = useState('');
   const [birth_year, setYear] = useState('');
-  const [name, setName] = useState(UserService.name);
-  const [weight, setWeight] = useState(UserService.weight);
-  const [height, setHeight] = useState(UserService.height);
+  const [name, setName] = useState('');
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
 
-
-  // Generate arrays for days, months, and years
   const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
   const months = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
   const years = Array.from({ length: 101 }, (_, i) => `${new Date().getFullYear() - i}`);

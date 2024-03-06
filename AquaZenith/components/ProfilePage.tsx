@@ -8,13 +8,15 @@ import {
   Text,
   useColorScheme,
   View,
-  TextInput
+  Button,
 } from 'react-native';
 
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
-
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../App';
 import UserService from './UserService';
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -46,9 +48,13 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
-function ProfilePage(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
 
+
+function ProfilePage({navigation}): React.JSX.Element {
+  const isDarkMode = useColorScheme() === 'dark';
+  const handleLogout = () => {
+    navigation.navigate('SignIn'); // 'SignIn' should be the name of your sign-in screen in your navigation stack
+  };
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -107,6 +113,11 @@ function ProfilePage(): React.JSX.Element {
               <Text style={styles.detailValue}>{UserService.wakeTime}</Text>
             </View>
           </View>
+          <Button
+        title="Logout"
+        onPress={handleLogout}
+        color={isDarkMode ? '#FFFFFF' : '#000000'} // Optional: Adjust button color based on theme
+      />
         </ScrollView>
       </SafeAreaView>
   );

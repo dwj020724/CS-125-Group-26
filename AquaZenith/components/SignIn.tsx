@@ -38,7 +38,7 @@ const Login = () => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       UserService.setEmail(email);
-      UserService.retrieveDocument();
+      await UserService.retrieveDocument();
       console.log(response);
       navigation.navigate('Main');
     } catch (error:any){
@@ -159,11 +159,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     margin: 16,
   },
-  // buttonText: {
-  //   textAlign: 'center',
-  //   color: '#ffffff',
-  //   fontWeight: 'bold',
-  // },
   roundedButton: {
     backgroundColor: 'black', // Button color
     paddingVertical: 10,

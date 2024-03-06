@@ -64,6 +64,7 @@ function UserGoal(): React.JSX.Element {
     console.log(`Water intake: ${water_intake}, Exercise minutes: ${exercise_min}, Calorie: ${calorie},
     Go to sleep at ${bedHour}:${bedMinute}, Waking up at ${wakeHour}:${wakeMinute}.`);
     // console.log(name);
+    
   };
   
 const backgroundStyle = {

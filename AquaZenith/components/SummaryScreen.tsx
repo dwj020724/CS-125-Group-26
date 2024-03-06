@@ -27,7 +27,6 @@ type SectionProps = PropsWithChildren<{
 
 function SummaryScreen(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-  UserService.retrieveDocument();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
