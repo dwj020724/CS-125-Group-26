@@ -19,6 +19,7 @@ import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
+import UserService from './UserService';
 
 
 type SignInScreenProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
@@ -36,6 +37,8 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
+      UserService.setEmail(email);
+      await UserService.retrieveDocument();
       console.log(response);
       navigation.navigate('Main');
     } catch (error:any){
@@ -50,6 +53,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
+      UserService.setEmail(email);
       console.log(response);
       // Alert.alert('Check your email!');
       navigation.navigate('UserInfo');
@@ -155,11 +159,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     margin: 16,
   },
-  // buttonText: {
-  //   textAlign: 'center',
-  //   color: '#ffffff',
-  //   fontWeight: 'bold',
-  // },
   roundedButton: {
     backgroundColor: 'black', // Button color
     paddingVertical: 10,
