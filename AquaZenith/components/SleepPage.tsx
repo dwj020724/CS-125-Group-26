@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
+import { View, Text, Button, StyleSheet, ActivityIndicator, Dimensions, SafeAreaView, ScrollView, useColorScheme } from 'react-native';
 import AppleHealthKit, { HealthValue } from 'react-native-health';
 import { BarChart } from 'react-native-chart-kit';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import ChatRecommend from './ChatRecommendComponent';
+
 
 const SleepData = () => {
   const [sleepData, setSleepData] = useState({ labels: [], datasets: [{ data: [] }] });
@@ -98,34 +100,59 @@ const SleepData = () => {
   //   return new Date(dateString).toLocaleDateString('en-CA', options); // 'en-CA' uses the YYYY/MM/DD format
   // };
 
+  const isDarkMode = useColorScheme() === 'dark';
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Sleep Data</Text>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      {error && <Text style={styles.errorText}>{error}</Text>}
-      {!loading && sleepData.labels.length > 0 && (
-        <BarChart
-        data={sleepData}
-        width={Dimensions.get('window').width - 16}
-        height={220}
-        yAxisLabel=""
-        yAxisSuffix="h" // Added suffix for clarity
-        yAxisInterval={1} // Include every label on the Y axis
-        fromZero = {true}
-        chartConfig={chartConfig}
-        style={{
-          marginVertical: 8,
-          borderRadius: 16
-        }}
-      />
-      )}
-      {/* {!loading && sleepData.labels.map((label, index) => (
-        <Text key={index} style={styles.stepCountText}>
-          {formatDate(label)} - {sleepData.datasets[0].data[index].toFixed(2)} hours
-        </Text>
-      ))} */}
-      <Button title="Refresh Data" onPress={loadSleepData} color="#841584" />
+
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <SafeAreaView style={[backgroundStyle, { flex: 0, backgroundColor: '#FFFFFF' }]}>
+        <ScrollView>
+          <View style={styles.iphoneProMax}>
+            <View style={styles.container}>
+              <Text style={styles.titleText}>Sleep Data</Text>
+              {loading && <ActivityIndicator size="large" color="#0000ff" />}
+              {error && <Text style={styles.errorText}>{error}</Text>}
+              {!loading && sleepData.labels.length > 0 && (
+                <BarChart
+                data={sleepData}
+                width={Dimensions.get('window').width - 16}
+                height={220}
+                yAxisLabel=""
+                yAxisSuffix="h" // Added suffix for clarity
+                yAxisInterval={1} // Include every label on the Y axis
+                fromZero = {true}
+                chartConfig={chartConfig}
+                style={{
+                  marginVertical: 8,
+                  borderRadius: 16
+                }}
+              />
+              )}
+              
+              {!loading && sleepData.labels.map((label, index) => (
+                <Text key={index} style={styles.stepCountText}>
+                  {label} - {sleepData.datasets[0].data[index].toFixed(2)} hours
+                </Text>
+              ))}
+              
+              <Button title="Refresh Data" onPress={loadSleepData} color="#841584" />
+            </View>
+            <ChatRecommend recommendationType='sleep'/>
+          </View>
+
+        </ScrollView>
+      </SafeAreaView>
     </View>
+
+
+
+
+
+
+    
   );
 };
 
@@ -153,5 +180,12 @@ const styles = StyleSheet.create({
       color: 'red',
       marginBottom: 20,
     },
+    iphoneProMax: {
+      backgroundColor: '#FFFFFF',
+      alignItems: 'center',
+      padding: 20,
+      width: '100%',
+    },
   });
+
 export default SleepData;

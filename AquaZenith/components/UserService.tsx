@@ -17,6 +17,11 @@ class UserService {
   wakeTime: string;
   sleepGoal: number;
   email:string;
+  currExerciseMin: number;
+  currCalorieBurn: number;
+  currSleepDur: string;
+  currWaterIntake: string;
+
 
 
   constructor() {
@@ -31,6 +36,11 @@ class UserService {
     this.wakeTime = '';
     this.sleepGoal = 0;
     this.email = '';
+    this.currExerciseMin = 0;
+    this.currCalorieBurn = 0;
+    this.currSleepDur = '';
+    this.currWaterIntake = '';
+
   }
   setEmail(email:string): void {
     this.email = email
@@ -67,6 +77,7 @@ class UserService {
 
     // Convert the difference back to hours
     this.sleepGoal = differenceInMinutes / 60;
+    console.log("SleepGoal set to: " + this.sleepGoal)
 
   }
 
@@ -97,6 +108,7 @@ class UserService {
         calorieBurn : this.calorieBurn,
         bedTime: this.bedTime,
         wakeTime: this.wakeTime,
+        // sleepGoal: this.sleepGoal
       });
       await AsyncStorage.setItem('userData', userData);
       console.log('User data saved successfully');
@@ -109,7 +121,8 @@ class UserService {
         exerciseMin: this.exerciseMin, 
         calorieBurn: this.calorieBurn, 
         bedTime: this.bedTime,
-        wakeTime: this.wakeTime
+        wakeTime: this.wakeTime,
+        // sleepGoal: this.sleepGoal
       });
     } catch (error) {
       console.error('Failed to save user data', error);
@@ -129,7 +142,7 @@ class UserService {
           this.setInfo(document["name"], document["weight"], document["height"], document["birthdate"]);
           this.setGoal(document["waterIntake"], document["exerciseMin"], document["calorieBurn"],
           document["bedTime"], document["wakeTime"]);
-          this.sleepGoal = document["sleepGoal"];
+          // this.sleepGoal = document["sleepGoal"];
           console.log('Document data:', document);
         }
       } else {

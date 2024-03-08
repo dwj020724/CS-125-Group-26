@@ -39,10 +39,10 @@ const Login = () => {
       const response = await signInWithEmailAndPassword(auth, email, password);
       UserService.setEmail(email);
       await UserService.retrieveDocument();
-      console.log(response);
+      // console.log(response);
       navigation.navigate('Main');
     } catch (error:any){
-      console.log(error);
+      // console.log(error);
       Alert.alert('Sign in failed' + error.message);
     } finally {
       setLoading(false);
@@ -54,11 +54,11 @@ const Login = () => {
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
       UserService.setEmail(email);
-      console.log(response);
+      // console.log(response);
       // Alert.alert('Check your email!');
       navigation.navigate('UserInfo');
     } catch (error:any){
-      console.log(error);
+      // console.log(error);
       Alert.alert('Sign in failed' + error.message);
     } finally {
       setLoading(false);

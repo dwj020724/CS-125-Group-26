@@ -143,18 +143,18 @@ class HealthDataComponent extends Component<HealthDataComponentProps, HealthData
         yAxisSuffix="" // Suffix for the Y-axis values, adjust accordingly
         chartConfig={{
           backgroundColor: '#ffffff',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
+          backgroundGradientFrom: '#ffffff',
+          backgroundGradientTo: '#ffffff',
           decimalPlaces: 0, // Optional: set the decimal places
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          color: (opacity = 1) => `rgba(13, 110, 0, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           style: {
             borderRadius: 16,
           },
           propsForDots: {
             r: "6",
             strokeWidth: "2",
-            stroke: "#ffa726"
+            stroke: "#ffffff"
           }
         }}
         
@@ -175,18 +175,18 @@ class HealthDataComponent extends Component<HealthDataComponentProps, HealthData
         yAxisSuffix=" min" // Suffix for the Y-axis values, adjust accordingly
         chartConfig={{
           backgroundColor: '#ffffff',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
+          backgroundGradientFrom: '#ffffff',
+          backgroundGradientTo: '#ffffff',
           decimalPlaces: 0, // Optional: set the decimal places
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          color: (opacity = 1) => `rgba(11, 0, 110, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           style: {
             borderRadius: 16,
           },
           propsForDots: {
             r: "6",
             strokeWidth: "2",
-            stroke: "#ffa726"
+            stroke: "#ffffff"
           }
         }}
         

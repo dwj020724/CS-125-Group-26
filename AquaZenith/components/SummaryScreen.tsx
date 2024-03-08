@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -26,6 +26,21 @@ type SectionProps = PropsWithChildren<{
 }>;
 
 function SummaryScreen(): React.JSX.Element {
+  const [isDataLoaded, setDataLoaded] = useState(false);
+  const [loadedComponentsCount, setLoadedComponentsCount] = useState(0);
+  const componentsToLoad = 4; // Assuming there are 4 HealthDataBoxComponent instances
+
+  const handleComponentLoaded = () => {
+    setLoadedComponentsCount(currentCount => currentCount + 1);
+  };
+
+  useEffect(() => {
+    if (loadedComponentsCount === componentsToLoad) {
+      setDataLoaded(true);
+    }
+  }, [loadedComponentsCount]);
+
+
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -40,34 +55,28 @@ function SummaryScreen(): React.JSX.Element {
             <Text style={styles.helloText}>Hello,</Text>
             <Text style={styles.nameText}>{UserService.name}</Text>
           </View>
-        <View style={styles.alertContainer}>
-          <Image style={styles.alertIcon} source={require('../alertimage.png')} />
-          <Text style={styles.alertText}>
-            
-          </Text>
-        </View>
         <View style={styles.metricsContainer}>
           {/* Heart Rate */}
           <View style={[styles.metricCard, styles.cardHeartRate]}>
-            <HealthDataBoxComponent type='Calories'/>
+            <HealthDataBoxComponent type='Calories' onLoaded={handleComponentLoaded}/>
           </View>
 
           {/* Exercise */}
           <View style={[styles.metricCard, styles.cardExercise]}>
-            <HealthDataBoxComponent type='Exercise'/>
+            <HealthDataBoxComponent type='Exercise' onLoaded={handleComponentLoaded}/>
           </View>
 
           {/* Sleep */}
           <View style={[styles.metricCard, styles.cardSleep]}>
-          <HealthDataBoxComponent type='Sleep'/>
+          <HealthDataBoxComponent type='Sleep' onLoaded={handleComponentLoaded}/>
           </View>
 
           {/* Hydration */}
           <View style={[styles.metricCard, styles.cardHydration]}>
-          <HealthDataBoxComponent type='Hydration'/>
+          <HealthDataBoxComponent type='Hydration' onLoaded={handleComponentLoaded}/>
           </View>
         </View>
-        <ChatRecommend />
+        {isDataLoaded && <ChatRecommend recommendationType='summary'/>}
       </View>
 
         </ScrollView>

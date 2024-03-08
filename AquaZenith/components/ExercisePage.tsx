@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import HealthDataComponent from './HealthDataComponent';
+import ChatRecommend from './ChatRecommendComponent';
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
@@ -52,24 +53,29 @@ function ExercisePage(): React.JSX.Element {
   };
 
   return (
-      // <SafeAreaView style={backgroundStyle}>
-      //   <StatusBar
-      //     barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      //     backgroundColor={backgroundStyle.backgroundColor}
-      //   />
-      //   <ScrollView
-      //     contentInsetAdjustmentBehavior="automatic"
-      //     style={backgroundStyle}>
+      <SafeAreaView style={backgroundStyle}>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={backgroundStyle}>
           
-      //     <View
-      //       style={{
-      //         backgroundColor: isDarkMode ? Colors.black : Colors.white,
-      //       }}>
-      //            <HealthDataComponent/>
-      //     </View>
-      //   </ScrollView>
-      // </SafeAreaView>
-      <HealthDataComponent/>
+          <View
+            style={{
+              backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            }}>
+                 <HealthDataComponent/>
+                 <ChatRecommend recommendationType='exercise'/>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+      // <View>
+      //   <HealthDataComponent/>
+      //   <ChatRecommend recommendationType='exercise'/>
+      // </View>
+      
   );
 }
 

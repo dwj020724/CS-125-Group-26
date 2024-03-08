@@ -7,9 +7,11 @@ import { BarChart } from 'react-native-chart-kit';
 import {
     Colors,
   } from 'react-native/Libraries/NewAppScreen';
+
+import ChatRecommend from './ChatRecommendComponent';
   
 interface HealthDataComponentState {
-    hydrationData: any | null;
+    hydrationData: { labels: [], datasets: [{ data: [] }] } | null;
     loading: boolean;
     error: string | null;
   }
@@ -166,12 +168,14 @@ interface HealthDataComponentState {
           {loading && <ActivityIndicator size="large" color="#0000ff" />}
           {error && <Text style={styles.errorText}>{error}</Text>}
           {hydrationData && this.renderChart()}
-          {/* {hydrationData && hydrationData.map((entry, index) => (
+          {hydrationData && hydrationData.labels.map((label, index) => (
             <Text key={index} style={styles.stepCountText}>
-              {formatDate(entry.startDate)} - {entry.value} mL
+              
+              {label} - {hydrationData.datasets[0].data[index].toFixed(2)} mL
             </Text>
-          ))} */}
+          ))}
           <Button title="Refresh Data" onPress={this.loadHydrationData} color="#841584" />
+          
         </View>
         );
     }
@@ -185,24 +189,25 @@ function WaterPage(): React.JSX.Element {
     };
   
     return (
-        // <SafeAreaView style={backgroundStyle}>
-        //   <StatusBar
-        //     barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        //     backgroundColor={backgroundStyle.backgroundColor}
-        //   />
-        //   <ScrollView
-        //     contentInsetAdjustmentBehavior="automatic"
-        //     style={backgroundStyle}>
+        <SafeAreaView style={backgroundStyle}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor={backgroundStyle.backgroundColor}
+          />
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            style={backgroundStyle}>
             
-        //     <View
-        //       style={{
-        //         backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        //       }}>
-        //            <WaterData/>
-        //     </View>
-        //   </ScrollView>
-        // </SafeAreaView>
-        <WaterData/>
+            <View
+              style={{
+                backgroundColor: isDarkMode ? Colors.black : Colors.white,
+              }}>
+                   <WaterData/>
+                   <ChatRecommend recommendationType='hydration'/>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+        // <WaterData/>
     );
   }
 const styles = StyleSheet.create({

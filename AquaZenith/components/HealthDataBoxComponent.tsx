@@ -20,6 +20,7 @@ interface HealthDataBoxComponentProps {
     // Property type for seleccting which version of the component to use Valid types are:
     // ["Calories", "Exercise", "Sleep", "Hydration"]
     type: string;
+    onLoaded?: () => void; // optional callback
 }
 
 class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, HealthDataBoxComponentState> {
@@ -60,10 +61,17 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             (err, results) => {
                 if (err) {
                     this.setState({ loading: false, error: 'Failed to load data' });
+                    this.props.onLoaded && this.props.onLoaded(); // callback on error
                     return
-                }               
-                this.setState({ activity_samples: results, loading: false });
-                
+                }
+                if (results && results.length > 0) {
+                    const lastSample = results[results.length - 1];
+                    UserService.currCalorieBurn = lastSample.activeEnergyBurned; // Update service state before component state
+                    console.log(UserService.currCalorieBurn);
+                }
+                this.setState({ activity_samples: results, loading: false }, () => {
+                    this.props.onLoaded && this.props.onLoaded(); // callback on success
+                });
             },
         )
     }
@@ -79,9 +87,17 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             (err, results) => {
                 if (err) {
                     this.setState({ loading: false, error: 'Failed to load data' });
+                    this.props.onLoaded && this.props.onLoaded(); // callback on error
                     return
-                }               
-                this.setState({ activity_samples: results, loading: false });
+                }
+                if (results && results.length > 0) {
+                    const lastSample = results[results.length - 1];
+                    UserService.currExerciseMin = lastSample.appleExerciseTime; // Update service state before component state
+                    console.log(UserService.currExerciseMin);
+                }
+                this.setState({ activity_samples: results, loading: false }, () => {
+                    this.props.onLoaded && this.props.onLoaded(); // callback on success
+                });
                 
             },
         )
@@ -98,6 +114,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             (err, results) => {
                 if (err) {
                     this.setState({ loading: false, error: 'Failed to load data' });
+                    this.props.onLoaded && this.props.onLoaded(); // callback on error
                     return
                 }
                 
@@ -106,7 +123,20 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
                 // transformedData.datasets.forEach((dataset, index) => {
                 //     console.log(`Dataset ${index}:`, dataset);
                 //   });
-                this.setState({ sleep_sample: transformedData, loading: false }); 
+                // this.setState({ sleep_sample: transformedData, loading: false }); 
+
+                if (transformedData != null) { // This checks for both null and undefined
+                    const sleepDuration = transformedData.datasets?.[0]?.data?.[0]; // Safely accessing the first data point
+                    if (typeof sleepDuration === 'number') {
+                        UserService.currSleepDur = sleepDuration.toFixed(1);
+                        console.log(UserService.currSleepDur);
+                        console.log("sleep goal" + UserService.sleepGoal);
+                    }
+                }
+
+                this.setState({ sleep_sample: transformedData, loading: false }, () => {
+                    this.props.onLoaded && this.props.onLoaded(); // callback on success
+                });
             },
         )
     }
@@ -122,6 +152,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             (err, results) => {
                 if (err) {
                     this.setState({ loading: false, error: 'Failed to load data' });
+                    this.props.onLoaded && this.props.onLoaded();
                     return
                 }
                 var total_water = 0
@@ -129,8 +160,16 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
                     total_water += result.value
                 });
                 total_water = total_water*1000 // convert to mililiters
+                // this.setState({ water_sample: total_water.toFixed(0), loading: false });  // .toFixed() just rounds off the float numbers from the conversion
 
-                this.setState({ water_sample: total_water.toFixed(0), loading: false });  // .toFixed() just rounds off the float numbers from the conversion
+                if (total_water.toFixed(0) != null) { // This checks for both null and undefined 
+                    UserService.currWaterIntake = total_water.toFixed(0);
+                    console.log(UserService.currWaterIntake);
+                }
+                this.setState({ water_sample: total_water.toFixed(0), loading: false }, () => {
+
+                    this.props.onLoaded && this.props.onLoaded(); // callback on success
+                });
             },
         )
     }
@@ -167,6 +206,16 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
     };
   }
 
+//   componentDidUpdate(prevProps: HealthDataBoxComponentProps, prevState: HealthDataBoxComponentState) {
+//     // Check if the loading state has changed from true to false
+//     if (prevState.loading === true && this.state.loading === false) {
+//       // If onLoaded is provided, call it
+//       if (this.props.onLoaded) {
+//         this.props.onLoaded();
+//       }
+//     }
+//   }
+
   render() {
     
     const { activity_samples, sleep_sample, water_sample, loading, error } = this.state;
@@ -180,7 +229,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             // Safely access the last item's activeEnergyBurned property
             const lastSample = activity_samples[activity_samples.length - 1];
             caloriesMessage = `${lastSample.activeEnergyBurned}/${UserService.calorieBurn} cal`; // Update the message with the last sample's value
-            (global as any).gHealthDataCalBurn = lastSample.activeEnergyBurned;
+            // UserService.currCalorieBurn = lastSample.activeEnergyBurned;
         } else {
             caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
         }
@@ -204,7 +253,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             // Safely access the last item's activeEnergyBurned property
             const lastSample = activity_samples[activity_samples.length - 1];
             caloriesMessage = `${lastSample.appleExerciseTime}/${UserService.exerciseMin} min`; // Update the message with the last sample's value
-            (global as any).gHealthDataExerciseMin = lastSample.appleExerciseTime;
+            // UserService.currExerciseMin = lastSample.appleExerciseTime;
         } else {
             caloriesMessage = "error"; // You could also leave this out or set a more descriptive error message
         }
@@ -226,7 +275,7 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
             const sleepDuration = sleep_sample.datasets?.[0]?.data?.[0]; // Safely accessing the first data point
             if (typeof sleepDuration === 'number') {
                 sleepMessage = `${sleepDuration.toFixed(1)} Hours`;
-                (global as any).gHealthDataSleepDur = sleepDuration.toFixed(1);
+                // UserService.currSleepDur = sleepDuration.toFixed(1);
             }
         }
 
@@ -240,9 +289,9 @@ class HealthDataBoxComponent extends Component<HealthDataBoxComponentProps, Heal
         );
     }
     else if(this.props.type == "Hydration"){
-        if (water_sample != null) { // This checks for both null and undefined 
-            (global as any).gHealthDataWaterSam = water_sample;
-        }
+        // if (water_sample != null) { // This checks for both null and undefined 
+        //     UserService.currWaterIntake = water_sample;
+        // }
         return (
             <View style={[styles.metricCard, styles.cardHydration]}>
                 {/* <Image style={styles.icon} source={require('./path/to/your/heart_icon.png')} /> */}
