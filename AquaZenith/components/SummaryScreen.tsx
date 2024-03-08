@@ -8,7 +8,8 @@ import {
   Text,
   useColorScheme,
   View,
-  Image
+  Image,
+  Button
 } from 'react-native';
 
 import {
@@ -29,16 +30,28 @@ function SummaryScreen(): React.JSX.Element {
   const [isDataLoaded, setDataLoaded] = useState(false);
   const [loadedComponentsCount, setLoadedComponentsCount] = useState(0);
   const componentsToLoad = 4; // Assuming there are 4 HealthDataBoxComponent instances
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleComponentLoaded = () => {
     setLoadedComponentsCount(currentCount => currentCount + 1);
   };
 
   useEffect(() => {
+    // Reset data loaded state when refreshKey changes
+    setDataLoaded(false);
+    setLoadedComponentsCount(0); // Reset the loaded components count on refresh
+    }, [refreshKey]); // Reacting to changes in refreshKey to re-initialize component loading
+
+  useEffect(() => {
     if (loadedComponentsCount === componentsToLoad) {
       setDataLoaded(true);
     }
   }, [loadedComponentsCount]);
+
+  // Function to trigger refresh
+  const refreshComponents = () => {
+    setRefreshKey(prevKey => prevKey + 1); // Changing the key will cause components to re-render
+  };
 
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -58,23 +71,24 @@ function SummaryScreen(): React.JSX.Element {
         <View style={styles.metricsContainer}>
           {/* Heart Rate */}
           <View style={[styles.metricCard, styles.cardHeartRate]}>
-            <HealthDataBoxComponent type='Calories' onLoaded={handleComponentLoaded}/>
+            <HealthDataBoxComponent key={`calories-${refreshKey}`} type='Calories' onLoaded={handleComponentLoaded}/>
           </View>
 
           {/* Exercise */}
           <View style={[styles.metricCard, styles.cardExercise]}>
-            <HealthDataBoxComponent type='Exercise' onLoaded={handleComponentLoaded}/>
+            <HealthDataBoxComponent key={`exercise-${refreshKey}`} type='Exercise' onLoaded={handleComponentLoaded}/>
           </View>
 
           {/* Sleep */}
           <View style={[styles.metricCard, styles.cardSleep]}>
-          <HealthDataBoxComponent type='Sleep' onLoaded={handleComponentLoaded}/>
+          <HealthDataBoxComponent key={`sleep-${refreshKey}`} type='Sleep' onLoaded={handleComponentLoaded}/>
           </View>
 
           {/* Hydration */}
           <View style={[styles.metricCard, styles.cardHydration]}>
-          <HealthDataBoxComponent type='Hydration' onLoaded={handleComponentLoaded}/>
+          <HealthDataBoxComponent key={`hydration-${refreshKey}`} type='Hydration' onLoaded={handleComponentLoaded}/>
           </View>
+          <Button title="Refresh Data" onPress={refreshComponents} />
         </View>
         {isDataLoaded && <ChatRecommend recommendationType='summary'/>}
       </View>

@@ -238,7 +238,7 @@ class HealthDataComponent extends Component<HealthDataComponentProps, HealthData
               {formatDate(entry.startDate)} - {entry.value} steps
             </Text>
           ))} */}
-          <Button title="Refresh Data" onPress={this.loadStepCountData} color="#841584" />
+          <Button title="Refresh Data" onPress={this.loadStepCountData} />
         </View>
       );
     }
@@ -257,7 +257,7 @@ class HealthDataComponent extends Component<HealthDataComponentProps, HealthData
               {formatDate(entry.startDate)} - {entry.value} steps
             </Text>
           ))} */}
-          <Button title="Refresh Data" onPress={this.loadStepCountData} color="#841584" />
+          <Button title="Refresh Data" onPress={this.loadStepCountData} />
         </View>
       );
     }

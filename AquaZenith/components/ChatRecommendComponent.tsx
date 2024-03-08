@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, Text, ScrollView } from 'react-native';
+import { View, TextInput, Button, Text, ScrollView, StyleSheet } from 'react-native';
 import { generateResponse, getModels } from '../ChatGPTService';
 import UserService from './UserService';
 
@@ -10,6 +10,7 @@ interface ChatRecommendProps {
 const ChatRecommend: React.FC<ChatRecommendProps> = ({ recommendationType = "Type a message"}) => {
     const [messages, setMessages] = useState<string[]>([]);
     const [userInput, setUserInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const init = async () => {
@@ -27,14 +28,16 @@ PLEASE ALWAYS SUGGEST A SPECIFIC EXERCISE FOR THE USER!
 Please respond in the following format:
 
 Water: <your reccommendation>
+
 Sleep: <your reccommendation>
+
 Exercise: <your reccommendation>
         
 Now Here is the Data -> Water: ${UserService.currWaterIntake}/${UserService.waterIntake}ml, Sleep ${UserService.currSleepDur}/${UserService.sleepGoal} hours, Exercise: ${UserService.currExerciseMin}/${UserService.exerciseMin} minutes`
               sendMessage(message);
             }else if(recommendationType == 'exercise'){
               var message = 
-`I will put data with a users exercise along with their current goal. 
+`I will put data with a users exercise minutes along with their current exercise minutes goal. 
 You will give short 2 sentence recommendation on what they can do to reach their goal. 
 If they have exercised a lot this day then maybe suggest an exercise that is a bit less intense and vice versa.
 PLEASE ALWAYS SUGGEST A SPECIFIC EXERCISE FOR THE USER! 
@@ -54,6 +57,7 @@ Also include a fun fact about hydration.
 Please respond in the following format:
 
 Water Recommendation: <your reccommendation>
+
 Fun Fact: <your fun fact>
         
 Now Here is the Data -> Water: ${UserService.currWaterIntake}/${UserService.waterIntake}ml`
@@ -68,6 +72,7 @@ Also include a fun fact about sleep.
 Please respond in the following format:
 
 Sleep Recommendation: <your reccommendation>
+
 Fun Fact: <your fun fact>
         
 Now Here is the Data -> Sleep: ${UserService.currSleepDur}/${UserService.sleepGoal} Hours`
@@ -86,10 +91,12 @@ Now Here is the Data -> Sleep: ${UserService.currSleepDur}/${UserService.sleepGo
         
         // setMessages(prevMessages => [...prevMessages, `User: ${userInput}`]);
         // console.log(userInput);
+        setIsLoading(true);
         console.log("-----------------------------------------------------\n" + message)
         const botResponse = await generateResponse(message);
         console.log(botResponse);
-        setMessages(prevMessages => [...prevMessages, `${botResponse}`]);
+        setMessages(prevMessages => [`${botResponse}`]);
+        setIsLoading(false);
         setUserInput('');
     };
 
@@ -103,6 +110,7 @@ Now Here is the Data -> Sleep: ${UserService.currSleepDur}/${UserService.sleepGo
           {messages.map((msg, index) => (
             <Text key={index}>{msg}</Text>
           ))}
+          {isLoading && <Text style={styles.loadingText}>Loading Recommendation...</Text>}
         </ScrollView>
         <View>
           {/* <TextInput 
@@ -116,5 +124,13 @@ Now Here is the Data -> Sleep: ${UserService.currSleepDur}/${UserService.sleepGo
       </View>
     );
   };
+
+  const styles = StyleSheet.create({
+    loadingText: {
+      fontSize: 16,
+      fontStyle: 'italic',
+      color: 'black',
+    },
+    });
   
   export default ChatRecommend;

@@ -174,7 +174,7 @@ interface HealthDataComponentState {
               {label} - {hydrationData.datasets[0].data[index].toFixed(2)} mL
             </Text>
           ))}
-          <Button title="Refresh Data" onPress={this.loadHydrationData} color="#841584" />
+          <Button title="Refresh Data" onPress={this.loadHydrationData} />
           
         </View>
         );

@@ -138,7 +138,7 @@ const SleepData = () => {
                 </Text>
               ))}
               
-              <Button title="Refresh Data" onPress={loadSleepData} color="#841584" />
+              <Button title="Refresh Data" onPress={loadSleepData} />
             </View>
             <ChatRecommend recommendationType='sleep'/>
           </View>
